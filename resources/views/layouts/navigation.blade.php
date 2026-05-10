@@ -15,6 +15,24 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
+
+                    @if(Auth::user()->hasRole('SuperAdmin'))
+                        <x-nav-link :href="route('companies.index')" :active="request()->routeIs('companies.*')">
+                            {{ __('Companies') }}
+                        </x-nav-link>
+                    @endif
+
+                    @if(Auth::user()->hasRole('Admin'))
+                        <x-nav-link :href="route('users.index')" :active="request()->routeIs('users.*')">
+                            {{ __('Users') }}
+                        </x-nav-link>
+                    @endif
+
+                    @if(Auth::user()->hasAnyRole(['SuperAdmin','Admin','Member']))
+                        <x-nav-link :href="route('short-urls.index')" :active="request()->routeIs('short-urls.*')">
+                            {{ __('Short URLs') }}
+                        </x-nav-link>
+                    @endif
                 </div>
             </div>
 
@@ -70,6 +88,24 @@
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
+            @if(Auth::user()->hasRole('SuperAdmin'))
+                <x-responsive-nav-link :href="route('companies.index')" :active="request()->routeIs('companies.*')">
+                    {{ __('Companies') }}
+                </x-responsive-nav-link>
+            @endif
+
+            @if(Auth::user()->hasRole('Admin'))
+                <x-responsive-nav-link :href="route('users.index')" :active="request()->routeIs('users.*')">
+                    {{ __('Users') }}
+                </x-responsive-nav-link>
+            @endif
+
+            @if(Auth::user()->hasAnyRole(['SuperAdmin','Admin','Member']))
+                <x-responsive-nav-link :href="route('short-urls.index')" :active="request()->routeIs('short-urls.*')">
+                    {{ __('Short URLs') }}
+                </x-responsive-nav-link>
+            @endif
+
         </div>
 
         <!-- Responsive Settings Options -->
