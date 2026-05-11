@@ -27,6 +27,24 @@
 
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
+                    <div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                        <form method="GET" action="{{ route('short-urls.index') }}" class="flex flex-col sm:flex-row sm:items-center gap-3">
+                            <label for="timeframe" class="font-semibold text-gray-700">Timeframe:</label>
+                            <select id="timeframe" name="timeframe" class="border rounded px-3 py-2 pr-7 text-sm">
+                                <option value="all" {{ request('timeframe', 'all') === 'all' ? 'selected' : '' }}>All</option>
+                                <option value="today" {{ request('timeframe') === 'today' ? 'selected' : '' }}>Today</option>
+                                <option value="last_week" {{ request('timeframe') === 'last_week' ? 'selected' : '' }}>Last Week</option>
+                                <option value="this_month" {{ request('timeframe') === 'this_month' ? 'selected' : '' }}>This Month</option>
+                                <option value="last_month" {{ request('timeframe') === 'last_month' ? 'selected' : '' }}>Last Month</option>
+                            </select>
+                            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm">Apply</button>
+                        </form>
+
+                        <div class="text-sm text-gray-600">
+                            Showing: <span class="font-semibold">{{ ucfirst(str_replace('_', ' ', $timeframe ?? request('timeframe', 'all'))) }}</span>
+                        </div>
+                    </div>
+
                     @if($shortUrls->count())
                         <div class="overflow-x-auto">
                             <table class="w-full">

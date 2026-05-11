@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use App\Models\User;
+use Carbon\Carbon;
 
 class ShortUrlController extends Controller
 {
@@ -41,32 +42,56 @@ class ShortUrlController extends Controller
             abort(403, 'User not found.');
         }
 
+        $timeframe = request()->query('timeframe', 'all');
+
         // SuperAdmin can see all short URLs from all companies
         if ($userDet->hasRole('SuperAdmin')) {
-            $shortUrls = ShortUrl::latest()->paginate(15);
+            $query = ShortUrl::latest();
             $company = null; // No specific company for super admin
         } else {
             $company = $this->getCompany();
 
             // Company Admin can see all short URLs from their company
             if ($userDet->hasRole('Admin') && $userDet->hasCompanyRole($company, 'admin')) {
-                $shortUrls = ShortUrl::where('company_id', $company->id)
-                    ->latest()
-                    ->paginate(15);
+                $query = ShortUrl::where('company_id', $company->id)->latest();
             }
             // Company Member can see only their own short URLs
             elseif ($userDet->hasRole('Member')) {
-                $shortUrls = ShortUrl::where('company_id', $company->id)
+                $query = ShortUrl::where('company_id', $company->id)
                     ->where('user_id', $userDet->id)
-                    ->latest()
-                    ->paginate(15);
+                    ->latest();
             } else {
                 abort(403, 'You do not have permission to view short URLs.');
             }
         }
 
+        $shortUrls = $this->applyTimeframeFilter($query, $timeframe)
+            ->paginate(15)
+            ->withQueryString();
 
-        return view('short-urls.index', compact('company', 'shortUrls', 'user'));
+        return view('short-urls.index', compact('company', 'shortUrls', 'user', 'timeframe'));
+    }
+
+    protected function applyTimeframeFilter($query, string $timeframe)
+    {
+        switch ($timeframe) {
+            case 'today':
+                return $query->whereDate('created_at', Carbon::today());
+            case 'last_week':
+                return $query->whereBetween('created_at', [
+                    Carbon::now()->subWeek()->startOfWeek(),
+                    Carbon::now()->subWeek()->endOfWeek(),
+                ]);
+            case 'this_month':
+                return $query->whereYear('created_at', Carbon::now()->year)
+                    ->whereMonth('created_at', Carbon::now()->month);
+            case 'last_month':
+                return $query->whereYear('created_at', Carbon::now()->subMonth()->year)
+                    ->whereMonth('created_at', Carbon::now()->subMonth()->month);
+            case 'all':
+            default:
+                return $query;
+        }
     }
 
     /**
