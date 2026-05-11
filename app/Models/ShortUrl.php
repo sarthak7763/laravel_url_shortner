@@ -15,11 +15,6 @@ class ShortUrl extends Model
         'original_url',
         'short_code',
         'description',
-        'expires_at',
-    ];
-
-    protected $casts = [
-        'expires_at' => 'datetime',
     ];
 
     /**
@@ -54,18 +49,6 @@ class ShortUrl extends Model
         } while (self::where('short_code', $code)->exists());
 
         return $code;
-    }
-
-    /**
-     * Check if URL is expired
-     */
-    public function isExpired()
-    {
-        if (!$this->expires_at) {
-            return false;
-        }
-
-        return now()->isAfter($this->expires_at);
     }
 
     /**

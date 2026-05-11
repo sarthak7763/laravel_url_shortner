@@ -14,11 +14,6 @@ class ShortUrlResolverController extends Controller
     {
         $shortUrl = ShortUrl::where('short_code', $shortCode)->firstOrFail();
 
-        // Check if URL is expired
-        if ($shortUrl->isExpired()) {
-            abort(410, 'This short URL has expired.');
-        }
-
         // Record the click
         $shortUrl->recordClick();
 

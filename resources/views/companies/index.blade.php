@@ -32,12 +32,14 @@
             </thead>
 
             <tbody>
-
+                @php 
+                    $counter = ($companies->currentPage() - 1) * $companies->perPage() + 1; @endphp
                 @forelse($companies as $company)
 
                     <tr>
                         <td class="border p-2">
-                            {{ $company->id }}
+                            {{ $counter++ }}
+                        </td>
                         </td>
 
                         <td class="border p-2">
@@ -63,18 +65,6 @@
                                class="bg-yellow-500 text-white px-3 py-1 rounded">
                                 Edit
                             </a>
-
-                            <form action="{{ route('companies.destroy', $company->id) }}"
-                                  method="POST">
-
-                                @csrf
-                                @method('DELETE')
-
-                                <button onclick="return confirm('Delete company?')"
-                                        class="bg-red-500 text-white px-3 py-1 rounded">
-                                    Delete
-                                </button>
-                            </form>
 
                         </td>
                     </tr>

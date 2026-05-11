@@ -48,17 +48,6 @@
                                         <td class="py-3 px-4">
                                             <a href="{{ route('users.show', $user) }}"
                                                class="text-blue-600 hover:text-blue-900 mr-3">View</a>
-                                            <a href="{{ route('users.edit', $user) }}"
-                                               class="text-yellow-600 hover:text-yellow-900 mr-3">Edit</a>
-                                            <form action="{{ route('users.destroy', $user) }}"
-                                                  method="POST"
-                                                  style="display:inline;">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit"
-                                                        class="text-red-600 hover:text-red-900"
-                                                        onclick="return confirm('Are you sure?')">Delete</button>
-                                            </form>
                                         </td>
                                     </tr>
                                 @endforeach

@@ -36,7 +36,6 @@
                                         <th class="text-left py-3 px-4">Original URL</th>
                                         <th class="text-left py-3 px-4">Created By</th>
                                         <th class="text-left py-3 px-4">Clicks</th>
-                                        <th class="text-left py-3 px-4">Status</th>
                                         <th class="text-left py-3 px-4">Actions</th>
                                     </tr>
                                 </thead>
@@ -61,32 +60,12 @@
                                                 </span>
                                             </td>
                                             <td class="py-3 px-4">
-                                                @if($url->isExpired())
-                                                    <span class="bg-red-100 text-red-800 px-2 py-1 rounded text-sm">
-                                                        Expired
-                                                    </span>
-                                                @else
-                                                    <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-sm">
-                                                        Active
-                                                    </span>
-                                                @endif
-                                            </td>
-                                            <td class="py-3 px-4">
                                                 <a href="{{ route('short-urls.show', $url) }}"
                                                    class="text-blue-600 hover:text-blue-900 mr-3">View</a>
                                                 
                                                 @if(!$user->hasRole('SuperAdmin') || $user->canEditShortUrl($url, $company) ?? false)
                                                     <a href="{{ route('short-urls.edit', $url) }}"
                                                        class="text-yellow-600 hover:text-yellow-900 mr-3">Edit</a>
-                                                    <form action="{{ route('short-urls.destroy', $url) }}"
-                                                          method="POST"
-                                                          style="display:inline;">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit"
-                                                                class="text-red-600 hover:text-red-900"
-                                                                onclick="return confirm('Are you sure?')">Delete</button>
-                                                    </form>
                                                 @endif
                                             </td>
                                         </tr>
